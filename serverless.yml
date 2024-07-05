@@ -1,0 +1,34 @@
+org: positiva
+service: aws-lambda-test-node
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  stage: dev
+
+custom:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    exclude: ['aws-sdk']
+    target: 'node20'
+    define: { 'require.resolve': undefined }
+    platform: 'node'
+    concurrency: 10
+
+functions:
+  hello:
+    handler: src/handlers/hello.main
+    events:
+      - http:
+          path: /hello
+          method: get
+
+package:
+  exclude:
+    - node_modules/**
+    - coverage/**
+    - .gitignore
+    - .git/**
